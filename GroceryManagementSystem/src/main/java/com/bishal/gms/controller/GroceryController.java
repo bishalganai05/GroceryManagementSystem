@@ -68,4 +68,8 @@ public class GroceryController {
 		productRepository.deleteById(id);
 	}
 	
+	@GetMapping("/health")
+    public String getHealth() {
+        return "Healthy";
+    }
 }

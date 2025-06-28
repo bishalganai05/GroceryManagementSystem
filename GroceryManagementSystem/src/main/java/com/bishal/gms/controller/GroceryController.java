@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,18 +24,21 @@ import com.bishal.gms.exception.IDNotFoundException;
 import com.bishal.gms.exception.MandatoryFieldException;
 import com.bishal.gms.repo.ProductRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
+@RequestMapping("/products")
 public class GroceryController {
 	@Autowired
 	private ProductRepository productRepository;
-	
-	@GetMapping("/products")
+
+	@GetMapping
 	public List<Product> getAllProducts(){
 		List<Product> products = productRepository.findAll();
 		return products;
 	}
 	
-	@GetMapping("/products/{id}")
+	@GetMapping("/{id}")
 	public Product getProductById(@PathVariable int id) {
 		Optional<Product> product = productRepository.findById(id);
 		if(product.isPresent()) {
@@ -44,7 +49,7 @@ public class GroceryController {
 		}
 	}
 	
-	@PostMapping("/products")
+	@PostMapping
 	public ResponseEntity<Product> addProduct(@RequestBody Product product) {
 		if(product.getProductName().isEmpty()) {
 			throw new MandatoryFieldException("Mandatory field missing");
@@ -53,7 +58,7 @@ public class GroceryController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
 	}
 	
-	@PutMapping("/products/{id}")
+	@PutMapping("/{id}")
 	public void updateProduct(@RequestBody Product product1,@PathVariable int id) {
 		Product product = productRepository.findById(id).get();
 		product.setProductName(product1.getProductName());
@@ -62,7 +67,7 @@ public class GroceryController {
 		productRepository.save(product);
 	}
 	
-	@DeleteMapping("/products/{id}")
+	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteProduct(@PathVariable int id) {
 		productRepository.deleteById(id);
@@ -72,4 +77,13 @@ public class GroceryController {
     public String getHealth() {
         return "Healthy";
     }
+	
+	@GetMapping("/csrf")
+	public CsrfToken getCsrfToken(HttpServletRequest request) {
+		return (CsrfToken) request.getAttribute("_csrf");
+	}
+	
+	
+	
+	
 }

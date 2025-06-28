@@ -3,13 +3,10 @@ package com.bishal.gms.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,25 +19,29 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bishal.gms.entity.Product;
 import com.bishal.gms.exception.IDNotFoundException;
 import com.bishal.gms.exception.MandatoryFieldException;
-import com.bishal.gms.repo.ProductRepository;
+import com.bishal.gms.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/products")
 public class GroceryController {
-	@Autowired
-	private ProductRepository productRepository;
+	private final ProductService productService;
+	
+
+	public GroceryController(ProductService productService) {
+		this.productService = productService;
+	}
 
 	@GetMapping
 	public List<Product> getAllProducts(){
-		List<Product> products = productRepository.findAll();
+		List<Product> products = productService.getAllProducts();
 		return products;
 	}
 	
 	@GetMapping("/{id}")
 	public Product getProductById(@PathVariable int id) {
-		Optional<Product> product = productRepository.findById(id);
+		Optional<Product> product = productService.getProductById(id);
 		if(product.isPresent()) {
 			return product.get();
 		}
@@ -54,23 +55,23 @@ public class GroceryController {
 		if(product.getProductName().isEmpty()) {
 			throw new MandatoryFieldException("Mandatory field missing");
 		}
-		Product newProduct = productRepository.save(product);
+		Product newProduct = productService.addProduct(product);
 		return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
 	}
 	
 	@PutMapping("/{id}")
 	public void updateProduct(@RequestBody Product product1,@PathVariable int id) {
-		Product product = productRepository.findById(id).get();
+		Product product = productService.getProductById(id).get();
 		product.setProductName(product1.getProductName());
 		product.setProductType(product1.getProductType());
 		product.setProductPrice(product1.getProductPrice());
-		productRepository.save(product);
+		productService.addProduct(product);
 	}
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteProduct(@PathVariable int id) {
-		productRepository.deleteById(id);
+		productService.deleteProduct(id);
 	}
 	
 	@GetMapping("/health")

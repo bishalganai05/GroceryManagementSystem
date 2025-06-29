@@ -26,18 +26,13 @@ public class UserController {
 
 	@PostMapping("/register")
 	public User registeruser(@RequestBody User user) {
-		//return userRepo.save(user);
 		return userService.register(user);
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> loginuser(@RequestBody User user) {
-		User u = userService.getUserByUsername(user.getUsername());
-		if(Objects.nonNull(u)) {
-			return ResponseEntity.status(HttpStatus.FOUND).body("User Found");
-		}
+	public String loginuser(@RequestBody User user) {
+		return userService.verify(user);
 		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
 	}
 	
 	@GetMapping

@@ -1,6 +1,11 @@
 package com.bishal.gms.service;
 
 import java.util.List;
+import java.util.Objects;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +19,15 @@ public class UserService {
 
 	private final UserRepo userRepo;
 	
-	public UserService(UserRepo userRepo, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	private final AuthenticationManager authenticationManager;
+	
+	private final JWTService jwtService;
+	
+	public UserService(UserRepo userRepo, BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.userRepo = userRepo;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.authenticationManager = authenticationManager;
+		this.jwtService = jwtService;
 	}
 
 	public User register(User user) {
@@ -28,8 +39,27 @@ public class UserService {
 		return userRepo.findAll();
 	}
 
-	public User getUserByUsername(String username) {
-		return userRepo.findByUsername(username);
+	public String verify(User user) {
+	    try {
+	        Authentication authentication = authenticationManager.authenticate(
+	            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+	        );
+
+	        if (authentication.isAuthenticated()) {
+	            return jwtService.generateToken(user);
+	        } else {
+	            return "Authentication Failed";
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Authentication Exception: " + e.getMessage();
+	    }
 	}
+
+	public String extractUserName() {
+		return "";
+	}
+
 
 }

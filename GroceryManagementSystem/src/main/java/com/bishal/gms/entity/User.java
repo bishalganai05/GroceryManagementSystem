@@ -1,5 +1,6 @@
 package com.bishal.gms.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,8 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
+	
+	@Column(nullable = false, unique = true)
 	private String username;
 	private String password;
 	private String role;

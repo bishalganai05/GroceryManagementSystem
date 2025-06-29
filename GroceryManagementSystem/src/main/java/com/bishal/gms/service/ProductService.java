@@ -32,5 +32,10 @@ public class ProductService {
 		productRepository.deleteById(id);
 	}
 	
-	
+	@SuppressWarnings("unused")
+	private Boolean testMethodForPrivateCase(String name) {
+		name = "Bishal";
+		System.out.println("Private test case executed "+name);
+		return true;
+	}
 }

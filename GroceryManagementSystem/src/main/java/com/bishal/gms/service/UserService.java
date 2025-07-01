@@ -1,7 +1,6 @@
 package com.bishal.gms.service;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,15 +14,16 @@ import com.bishal.gms.repo.UserRepo;
 @Service
 public class UserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private final UserRepo userRepo;
-	
+
 	private final AuthenticationManager authenticationManager;
-	
+
 	private final JWTService jwtService;
-	
-	public UserService(UserRepo userRepo, BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationManager authenticationManager, JWTService jwtService) {
+
+	public UserService(UserRepo userRepo, BCryptPasswordEncoder bCryptPasswordEncoder,
+			AuthenticationManager authenticationManager, JWTService jwtService) {
 		this.userRepo = userRepo;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.authenticationManager = authenticationManager;
@@ -31,7 +31,7 @@ public class UserService {
 	}
 
 	public User register(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()) );
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepo.save(user);
 	}
 
@@ -40,26 +40,20 @@ public class UserService {
 	}
 
 	public String verify(User user) {
-	    try {
-	        Authentication authentication = authenticationManager.authenticate(
-	            new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-	        );
+		try {
+			Authentication authentication = authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-	        if (authentication.isAuthenticated()) {
-	            return jwtService.generateToken(user);
-	        } else {
-	            return "Authentication Failed";
-	        }
+			if (authentication.isAuthenticated()) {
+				return jwtService.generateToken(user);
+			} else {
+				return "Authentication Failed";
+			}
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return "Authentication Exception: " + e.getMessage();
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Authentication Exception: " + e.getMessage();
+		}
 	}
-
-	public String extractUserName() {
-		return "";
-	}
-
 
 }

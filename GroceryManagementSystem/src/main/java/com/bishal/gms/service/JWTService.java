@@ -1,9 +1,6 @@
 package com.bishal.gms.service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
@@ -14,65 +11,51 @@ import com.bishal.gms.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JWTService {
-	//private String secretKey = null;
 
+	public String getSecret() {
+		return "xg1oOpQ8lZIRPyFS3TObKJp6KnAXW7tA3NfLx63Mbko";
+	}
+	
+	private SecretKey getSecretKey() {
+		String secret = getSecret(); 
+	    return Keys.hmacShaKeyFor(secret.getBytes());	
+	}
+	
 	public String generateToken(User user) {
-		Map<String, Object> claimsMap = new HashMap<>();
 		return Jwts.builder()
-				.claims()
-				.add(claimsMap)
 				.subject(user.getUsername())
 				.issuer("Bishal")
 				.issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + 60 * 30 * 1000))
-				.and()
-				.signWith(generatedKey())
+				.signWith(getSecretKey())
 				.compact();
 	}
-
-	private SecretKey generatedKey() {
-		byte[] decode = Decoders.BASE64URL.decode(getSecretKey()); 
-	    return Keys.hmacShaKeyFor(decode);	
-	}
-
-	public String getSecretKey() {
-		return "xg1oOpQ8lZIRPyFS3TObKJp6KnAXW7tA3NfLx63Mbko";
+	
+	private Claims body(String jwtToken) {
+		return Jwts
+					.parser()
+					.verifyWith(getSecretKey())
+					.build()
+					.parseSignedClaims(jwtToken)
+					.getPayload();
 	}
 
 	public String extractUsername(String jwtToken) {
-		return extractClaims(jwtToken,Claims::getSubject);
+		return body(jwtToken).getSubject();
 	}
-
-	private <T> T extractClaims(String jwtToken, Function<Claims,T> claimResolver) {
-		Claims claims = extractClaims(jwtToken);
-		return claimResolver.apply(claims);
-	}
-
-	private Claims extractClaims(String jwtToken) {
-		
-		return Jwts
-				.parser()
-				.verifyWith(generatedKey())
-				.build()
-				.parseSignedClaims(jwtToken)
-				.getPayload();
-	}
-
-	public boolean isTokenValid(String jwtToken, UserDetails userDetails) {
-		final String usernameString = extractUsername(jwtToken);
-		return (usernameString.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken));
-	}
-
+	
 	private boolean isTokenExpired(String jwtToken) {
-		return extractExpiration(jwtToken).before(new Date());
+		return body(jwtToken).getExpiration().before(new Date());
+	}
+	
+	public boolean isTokenValid(String username, UserDetails userDetails, String jwtToken) {
+		return (username.equals(userDetails.getUsername()) && !isTokenExpired(jwtToken));
 	}
 
-	private Date extractExpiration(String jwtToken) {
-		return extractClaims(jwtToken,Claims::getExpiration);
-	}
+	
+
 }

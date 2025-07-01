@@ -1,10 +1,7 @@
 package com.bishal.gms.controller;
 
 import java.util.List;
-import java.util.Objects;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +36,6 @@ public class UserController {
 	public List<User> getAllUsers(){
 		return userService.getAllUsers();
 	}
-	
 	
 	
 }

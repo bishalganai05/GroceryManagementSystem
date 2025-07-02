@@ -1,7 +1,9 @@
 package com.bishal.gms.service;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +22,19 @@ public class CustomUserDetails implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singleton(new SimpleGrantedAuthority("USER"));
+		Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+		
+		authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getRole().name()));
+		authorities.addAll(
+				user.getRole().getPermissions()
+								.stream()
+								.map(permissions-> new SimpleGrantedAuthority(permissions.name()))
+								.collect(Collectors.toSet())
+		
+				);
+		
+		
+		return authorities;
 	}
 
 	@Override

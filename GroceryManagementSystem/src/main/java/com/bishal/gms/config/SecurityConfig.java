@@ -2,6 +2,7 @@ package com.bishal.gms.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.bishal.gms.entity.Permissions;
 
 @Configuration
 @EnableWebSecurity
@@ -36,9 +39,12 @@ public class SecurityConfig {
 					.csrf(csrf->csrf.disable())
 					.authorizeHttpRequests(request->request
 															.requestMatchers("/users/register", "/users/login").permitAll()
+															.requestMatchers(HttpMethod.GET,"/products/**").hasAuthority(Permissions.PRODUCT_READ.name())
+															.requestMatchers(HttpMethod.POST,"/products/**").hasAuthority(Permissions.PRODUCT_WRITE.name())
+															.requestMatchers(HttpMethod.DELETE,"/products/**").hasAuthority(Permissions.PRODUCT_DELETE.name())
 															.anyRequest().authenticated())
 					.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class );
-		
+					
 		
 		return httpSecurity.build();
 	}

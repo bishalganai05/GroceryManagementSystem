@@ -25,11 +25,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/products")
-public class GroceryController {
+public class ProductController {
 	private final ProductService productService;
 	
 
-	public GroceryController(ProductService productService) {
+	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
 

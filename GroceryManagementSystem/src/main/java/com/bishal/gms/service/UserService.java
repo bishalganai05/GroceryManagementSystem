@@ -41,7 +41,8 @@ public class UserService {
 	}
 
 	public List<User> getAllUsers() {
-		return userRepo.findAll();
+		List<User> allUsers = userRepo.findAll();
+		return allUsers;
 	}
 
 	public String verify(User user) {

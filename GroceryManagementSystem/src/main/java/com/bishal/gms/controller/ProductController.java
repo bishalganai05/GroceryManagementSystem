@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bishal.gms.entity.Product;
 import com.bishal.gms.exception.IDNotFoundException;
 import com.bishal.gms.exception.MandatoryFieldException;
+import com.bishal.gms.service.CacheInspectionService;
 import com.bishal.gms.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +29,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/products")
 public class ProductController {
 	private final ProductService productService;
-	
+	private final CacheInspectionService cacheInspectionService;
 
-	public ProductController(ProductService productService) {
+	public ProductController(ProductService productService, CacheInspectionService cacheInspectionService) {
 		this.productService = productService;
+		this.cacheInspectionService = cacheInspectionService;
 	}
 
 	@GetMapping
@@ -92,7 +94,9 @@ public class ProductController {
 		return (CsrfToken) request.getAttribute("_csrf");
 	}
 	
-	
-	
+	@GetMapping("/cacheData")
+	public void getCache() {
+		cacheInspectionService.printCacheContents("products");
+	}
 	
 }

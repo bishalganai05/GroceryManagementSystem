@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity; 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +35,14 @@ public class ProductController {
 	}
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('PRODUCT_READ')")	
 	public List<Product> getAllProducts(){
 		List<Product> products = productService.getAllProducts();
 		return products;
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('PRODUCT_READ')")	
 	public Product getProductById(@PathVariable int id) {
 		Optional<Product> product = productService.getProductById(id);
 		if(product.isPresent()) {
@@ -51,6 +54,7 @@ public class ProductController {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('PRODUCT_WRITE')")	
 	public ResponseEntity<Product> addProduct(@RequestBody Product product) {
 		if(product.getProductName().isEmpty()) {
 			throw new MandatoryFieldException("Mandatory field missing");
@@ -60,6 +64,7 @@ public class ProductController {
 	}
 	
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAuthority('PRODUCT_WRITE')")
 	public void updateProduct(@RequestBody Product product1,@PathVariable int id) {
 		Product product = productService.getProductById(id).get();
 		product.setProductName(product1.getProductName());
@@ -69,17 +74,20 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('PRODUCT_DELETE')")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteProduct(@PathVariable int id) {
 		productService.deleteProduct(id);
 	}
 	
 	@GetMapping("/health")
+	@PreAuthorize("hasAuthority('PRODUCT_READ')")	
     public String getHealth() {
         return "Healthy";
     }
 	
 	@GetMapping("/csrf")
+	@PreAuthorize("hasAuthority('PRODUCT_READ')")	
 	public CsrfToken getCsrfToken(HttpServletRequest request) {
 		return (CsrfToken) request.getAttribute("_csrf");
 	}

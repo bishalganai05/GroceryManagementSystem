@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bishal.gms.entity.User;
+import com.bishal.gms.exception.UserAlreadyExistsException;
 import com.bishal.gms.repo.UserRepo;
 
 @Service
@@ -31,6 +32,10 @@ public class UserService {
 	}
 
 	public User register(User user) {
+		if(userRepo.findByUsername(user.getUsername()).isPresent()) {
+			throw new UserAlreadyExistsException("User Already Exists");
+		}
+		user.setRole(user.getRole());
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepo.save(user);
 	}
@@ -55,5 +60,6 @@ public class UserService {
 			return "Authentication Exception: " + e.getMessage();
 		}
 	}
+	
 
 }

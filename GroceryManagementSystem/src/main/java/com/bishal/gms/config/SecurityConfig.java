@@ -41,6 +41,11 @@ public class SecurityConfig {
 															//.requestMatchers(HttpMethod.GET,"/products/**").hasAuthority(Permissions.PRODUCT_READ.name())
 															//.requestMatchers(HttpMethod.POST,"/products/**").hasAuthority(Permissions.PRODUCT_WRITE.name())
 															//.requestMatchers(HttpMethod.DELETE,"/products/**").hasAuthority(Permissions.PRODUCT_DELETE.name())
+															.requestMatchers(
+												                    "/v3/api-docs/**",
+												                    "/swagger-ui/**",
+												                    "/swagger-ui.html"
+												                ).permitAll()
 															.anyRequest().authenticated())
 					.addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class );
 					

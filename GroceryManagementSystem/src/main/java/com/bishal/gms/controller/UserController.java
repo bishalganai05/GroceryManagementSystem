@@ -39,7 +39,7 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasAuthority('ADMIN')")
-	@PostMapping("/register/a dmin")
+	@PostMapping("/register/admin")
 	public ResponseEntity<User> registerByAdmin(@RequestBody User user) {
 		
 		if(user.getUsername().isEmpty() || user.getPassword().isEmpty()) {

@@ -1,5 +1,7 @@
 package com.bishal.gms.entity;
 
+import com.bishal.gms.dto.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,5 +1,4 @@
-package com.bishal.gms.entity;
-
+package com.bishal.gms.dto;
 
 public class RegisterUserRequest {
 	private String username;

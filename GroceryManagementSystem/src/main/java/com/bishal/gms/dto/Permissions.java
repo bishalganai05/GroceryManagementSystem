@@ -1,4 +1,4 @@
-package com.bishal.gms.entity;
+package com.bishal.gms.dto;
 
 public enum Permissions {
 	PRODUCT_READ,

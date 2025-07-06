@@ -1,4 +1,4 @@
-package com.bishal.gms.entity;
+package com.bishal.gms.dto;
 
 import java.util.Set;
 

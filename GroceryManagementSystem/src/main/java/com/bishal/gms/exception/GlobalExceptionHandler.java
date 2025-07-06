@@ -1,13 +1,9 @@
-package com.bishal.gms.controller;
+package com.bishal.gms.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.bishal.gms.exception.IDNotFoundException;
-import com.bishal.gms.exception.MandatoryFieldException;
-import com.bishal.gms.exception.UserAlreadyExistsException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

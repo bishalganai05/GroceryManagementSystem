@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bishal.gms.entity.Role;
+import com.bishal.gms.dto.Role;
 import com.bishal.gms.entity.User;
 import com.bishal.gms.exception.MandatoryFieldException;
 import com.bishal.gms.service.UserService;

@@ -38,6 +38,16 @@ public class ProductService {
 	    productRepository.deleteById(id);
 	}
 	
+	public List<Product> getProductsByProductType(String productType) {
+		//System.out.println("HI2");
+		return productRepository.findByProductTypeOrderByProductPrice(productType);
+	}
+	
+	public List<Product> getProductsByPartialName(String productType) {
+		//System.out.println("HI2");
+		return productRepository.findProductByPartialProductName(productType);
+	}
+	
 	@SuppressWarnings("unused")
 	private Boolean testMethodForPrivateCase(String name) {
 		name = "Bishal";

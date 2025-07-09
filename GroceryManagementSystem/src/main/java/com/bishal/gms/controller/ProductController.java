@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,6 +81,20 @@ public class ProductController {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteProduct(@PathVariable int id) {
 		productService.deleteProduct(id);
+	}
+	
+	@GetMapping("/getByProductType")
+	@PreAuthorize("hasAuthority('PRODUCT_READ')") 	
+	public List<Product> getProductByProductType(@RequestParam String productType){
+		//System.out.println("HI1");
+		return productService.getProductsByProductType(productType);
+	}
+	
+	@GetMapping("/getByPartialName")
+	@PreAuthorize("hasAuthority('PRODUCT_READ')") 	
+	public List<Product> getProductByPartialName(@RequestParam String name){
+		//System.out.println("HI1");
+		return productService.getProductsByPartialName(name);
 	}
 	
 	@GetMapping("/health")

@@ -38,7 +38,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
 	}
 	
-	@PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/register/admin")
 	public ResponseEntity<User> registerByAdmin(@RequestBody User user) {
 		

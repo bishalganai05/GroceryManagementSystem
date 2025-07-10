@@ -196,9 +196,9 @@ To contribute to the Grocery Management System\! If you'd like to contribute, pl
 6.  Open a Pull Request.
 
 
-Bishal
+Github Profile
 
-  * **GitHub**: [https://github.com/bishal-s](https://www.google.com/search?q=https://github.com/bishal-s) (Replace with actual if different)
-  * **Email**: [your.email@example.com](mailto:your.email@example.com) (Optional: Add your professional email)
+  * **GitHub**: [https://github.com/bishalganai05](https://www.google.com/search?q=https://github.com/bishalganai05)
+ 
 
 -----

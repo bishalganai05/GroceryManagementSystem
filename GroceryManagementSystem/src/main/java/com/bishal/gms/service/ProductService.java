@@ -7,11 +7,13 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bishal.gms.entity.Product;
 import com.bishal.gms.repo.ProductRepository;
 
 @Service
+@Transactional
 public class ProductService {
 	private final ProductRepository productRepository;
 

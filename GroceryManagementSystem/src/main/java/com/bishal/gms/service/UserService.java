@@ -7,12 +7,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bishal.gms.entity.User;
 import com.bishal.gms.exception.UserAlreadyExistsException;
 import com.bishal.gms.repo.UserRepo;
 
 @Service
+@Transactional
 public class UserService {
 
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
